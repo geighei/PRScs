@@ -63,7 +63,7 @@ def mcmc(a, b, phi, sst_dict, n, ld_blk, blk_size, n_iter, n_burnin, thin, chrom
 
         delta = random.gamma(a+b, 1.0/(psi+phi))
 
-        for jj in range(p):
+        for jj in range(p): 
             psi[jj] = gigrnd.gigrnd(a-0.5, 2.0*delta[jj], n*beta[jj]**2/sigma)
         psi[psi>1] = 1.0
 

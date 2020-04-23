@@ -44,8 +44,10 @@ def gigrnd(p, a, b):
         swap = True
     else:
         swap = False
-
-    alpha = math.sqrt(math.pow(omega,2)+math.pow(lam,2))-lam
+    
+    # we run into issues here if omega is smaller than machine precision epsilon, in which 
+    # case alpha evaluates to zero, resulting in later ZeroDivisionError exception
+    alpha = max(1e-16, math.sqrt(math.pow(omega,2)+math.pow(lam,2))-lam)
 
     # find t
     x = -psi(1, alpha, lam)
@@ -63,11 +65,11 @@ def gigrnd(p, a, b):
     elif x > 2:
         s = math.sqrt(4/(alpha*math.cosh(1)+lam))
     elif x < 1/2:
-        if alpha == 0:
-            s = 1/lam
-        else:
+        try:
             s = min(1/lam, math.log(1+1/alpha+math.sqrt(1/math.pow(alpha,2)+2/alpha)))
-
+        except ZeroDivisionError:
+            print("ZeroDivisionError exception thrown due to alpha value of " + str(alpha) + ". Setting s = 1/lam.")
+            s = 1/lam
     # find auxiliary parameters
     eta = -psi(t, alpha, lam)
     zeta = -dpsi(t, alpha, lam)

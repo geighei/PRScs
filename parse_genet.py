@@ -53,13 +53,18 @@ def parse_sumstats(ref_dict, vld_dict, sst_file, n_subj):
     ATGC = ['A', 'T', 'G', 'C']
     sst_dict = {'SNP':[], 'A1':[], 'A2':[]}
     with open(sst_file) as ff:
-        header = next(ff)
+        header = (next(ff).strip()).split()
+        snp_index = header.index('SNP')
+        a1_index = header.index('A1')
+        a2_index = header.index('A2')
         for line in ff:
             ll = (line.strip()).split()
-            if ll[1] in ATGC and ll[2] in ATGC:
+	    a1 = ll[a1_index].upper()
+	    a2 = ll[a2_index].upper()
+            if a1 in ATGC and a2 in ATGC:
                 sst_dict['SNP'].append(ll[0])
-                sst_dict['A1'].append(ll[1])
-                sst_dict['A2'].append(ll[2])
+                sst_dict['A1'].append(a1)
+                sst_dict['A2'].append(a2)
 
     print('... %d SNPs read from %s ...' % (len(sst_dict['SNP']), sst_file))
 
@@ -88,25 +93,27 @@ def parse_sumstats(ref_dict, vld_dict, sst_file, n_subj):
         header = [col.upper() for col in header]
         for line in ff:
             ll = (line.strip()).split()
-            snp = ll[0]; a1 = ll[1]; a2 = ll[2]
+            snp = ll[snp_index]
+	    a1 = ll[a1_index].upper()
+	    a2 = ll[a2_index].upper()
             if a1 not in ATGC or a2 not in ATGC:
                 continue
             if (snp, a1, a2) in comm_snp or (snp, mapping[a1], mapping[a2]) in comm_snp:
                 if 'BETA' in header:
-                    beta = float(ll[3])
+                    beta = float(header.index('BETA'))
                 elif 'OR' in header:
-                    beta = sp.log(float(ll[3]))
+                    beta = sp.log(float(header.index('OR')))
 
-                p = max(float(ll[4]), 1e-323)
+                p = max(float(header.index('P')), 1e-323)
                 beta_std = sp.sign(beta)*abs(norm.ppf(p/2.0))/n_sqrt
                 sst_eff.update({snp: beta_std})
             elif (snp, a2, a1) in comm_snp or (snp, mapping[a2], mapping[a1]) in comm_snp:
                 if 'BETA' in header:
-                    beta = float(ll[3])
+                    beta = float(header.index('BETA'))
                 elif 'OR' in header:
-                    beta = sp.log(float(ll[3]))
+                    beta = sp.log(float(header.index('OR')))
 
-                p = max(float(ll[4]), 1e-323)
+                p = max(float(header.index('P')), 1e-323)
                 beta_std = -1*sp.sign(beta)*abs(norm.ppf(p/2.0))/n_sqrt
                 sst_eff.update({snp: beta_std})
 

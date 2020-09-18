@@ -59,8 +59,8 @@ def parse_sumstats(ref_dict, vld_dict, sst_file, n_subj):
         a2_index = header.index('A2')
         for line in ff:
             ll = (line.strip()).split()
-	    a1 = ll[a1_index].upper()
-	    a2 = ll[a2_index].upper()
+            a1 = ll[a1_index].upper()
+            a2 = ll[a2_index].upper()
             if a1 in ATGC and a2 in ATGC:
                 sst_dict['SNP'].append(ll[0])
                 sst_dict['A1'].append(a1)
@@ -94,8 +94,8 @@ def parse_sumstats(ref_dict, vld_dict, sst_file, n_subj):
         for line in ff:
             ll = (line.strip()).split()
             snp = ll[snp_index]
-	    a1 = ll[a1_index].upper()
-	    a2 = ll[a2_index].upper()
+            a1 = ll[a1_index].upper()
+            a2 = ll[a2_index].upper()
             if a1 not in ATGC or a2 not in ATGC:
                 continue
             if (snp, a1, a2) in comm_snp or (snp, mapping[a1], mapping[a2]) in comm_snp:

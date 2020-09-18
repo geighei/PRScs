@@ -59,8 +59,8 @@ def parse_sumstats(ref_dict, vld_dict, sst_file, n_subj):
         for line in ff:
             ll = (line.strip()).split()
             sst_dict['SNP'].append(ll[snp_index])
-            sst_dict['A1'].append(ll[a1_index])
-            sst_dict['A2'].append(ll[a2_index])
+            sst_dict['A1'].append(ll[a1_index].upper())
+            sst_dict['A2'].append(ll[a2_index].upper())
 
     print('... %d SNPs read from %s ...' % (len(sst_dict['SNP']), sst_file))
 
